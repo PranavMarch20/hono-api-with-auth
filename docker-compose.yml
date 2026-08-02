@@ -1,15 +1,18 @@
 services:
   db:
-    image: postgres:18.0
-    hostname: ${DB_HOST}
+    image: postgres:18
+    restart: unless-stopped
+
     ports:
-      - "5432:${DB_PORT}"
+      - "${DB_PORT}:5432"
+
     environment:
-      - POSTGRES_USER= ${DB_USER}
-      - POSTGRES_PASSWORD= ${DB_PASSWORD}
-      - POSTGRES_DB= ${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    
     volumes:
       - pgdata:/var/lib/postgresql
-      
+
 volumes:
   pgdata:
