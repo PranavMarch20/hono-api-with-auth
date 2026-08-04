@@ -8,6 +8,7 @@ const envSchema = z.object({
   DB_HOST: z.string().min(1),
   DB_USER: z.string().min(1),
   DB_PORT: z.coerce.number().int().positive(),
+  JWT_SECRET: z.string().min(1),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
