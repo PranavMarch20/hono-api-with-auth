@@ -1,9 +1,10 @@
 import { sValidator } from "@hono/standard-validator";
 import { Hono } from "hono";
-import z, { optional } from "zod";
+import z from "zod";
 import { db } from "../db/db.ts";
 import { authorTable } from "../db/schema.ts";
 import { eq } from "drizzle-orm";
+import { apiKeyAuth, type ApiKeyEnv } from "../middlewares/auth.ts";
 
 const app = new Hono();
 
@@ -33,15 +34,18 @@ app.get("/:id", async (c) => {
   return c.json(author);
 });
 
-app.post("/", sValidator("json", createAuthorSchema), async (c) => {
+const protectedApp = new Hono<ApiKeyEnv>()
+protectedApp.use(apiKeyAuth);
+
+protectedApp.post("/", sValidator("json", createAuthorSchema), async (c) => {
   const data = c.req.valid("json");
 
   const [author] = await db.insert(authorTable).values(data).returning();
-
+  
   return c.json(author, 201);
 });
 
-app.put("/:id", sValidator("json", updateAuthorSchema), async (c) => {
+protectedApp.put("/:id", sValidator("json", updateAuthorSchema), async (c) => {
   const id = c.req.param("id");
   const data = c.req.valid("json");
 
@@ -49,7 +53,7 @@ app.put("/:id", sValidator("json", updateAuthorSchema), async (c) => {
     .update(authorTable)
     .set(data)
     .where(eq(authorTable.id, id))
-    .returning( );
+    .returning();
 
   if (!author) {
     return c.json({ error: "Author not found" }, 404);
@@ -58,12 +62,14 @@ app.put("/:id", sValidator("json", updateAuthorSchema), async (c) => {
   return c.json(author, 201);
 });
 
-app.delete("/:id", async (c) => {
+protectedApp.delete("/:id", async (c) => {
   const id = c.req.param("id");
 
   await db.delete(authorTable).where(eq(authorTable.id, id))
 
   return c.body(null, 204);
 });
+
+app.route("/", protectedApp);
 
 export default app;

@@ -10,5 +10,19 @@ export const relations = defineRelations(schema, (r) => ({
   },
   userTable: {
     apiKeys: r.many.apiKeyTable(),
+    booksAdded: r.many.bookTable(),
+  },
+  authorTable: {
+    books: r.many.bookTable(),
+  },
+  bookTable: {
+    author: r.one.authorTable({
+      from: r.bookTable.authorId,
+      to: r.authorTable.id,
+    }),
+    addedByUser: r.one.userTable({
+      from: r.bookTable.addedby,
+      to: r.userTable.id,
+    }),
   },
 }));

@@ -1,4 +1,4 @@
-import { randomBytes, scrypt, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, scrypt, timingSafeEqual } from "node:crypto";
 
 export async function hashPassword(password: string) {
   const salt = randomBytes(16).toString("hex");
@@ -13,6 +13,18 @@ export async function verifyPassword(password: string, storedHash: string) {
 
   const derived = await scryptAsync(password, salt);
   return timingSafeEqual(stored, derived);
+}
+
+export function generateApiKey() {
+  const raw = randomBytes(32).toString("base64");
+  const hash = hashApiKey(raw);
+  const prefix = raw.slice(0, 8);
+
+  return { raw, hash, prefix };
+}
+
+export function hashApiKey(key: string) {
+  return createHash("sha256").update(key).digest("hex");
 }
 
 async function scryptAsync(password: string, salt: string) {
