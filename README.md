@@ -1,7 +1,5 @@
 # Hono API with Authentication
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 A **TypeScript** based HTTP API built with the **Hono** framework, featuring **JWT‑based API‑key authentication**, **PostgreSQL** persistence via **Drizzle ORM**, and **Zod** validation. The project demonstrates a clean, modular structure with routes for authors, books, authentication, and API‑key management.
 
 ---
