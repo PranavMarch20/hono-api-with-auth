@@ -129,7 +129,7 @@ All routes are prefixed with the entity name (`/authors`, `/books`, `/auth`, `/a
 ### Authentication (`/auth`)
 | Method | Path | Description |
 |--------|------|-------------|
-| `POST` | `/auth/login` | Generate a new API key for a user (placeholder implementation) |
+| `POST` | `/auth/login` | Authenticate a user and issue a JWT‑based API key |
 | `POST` | `/auth/logout` | Revoke an API key |
 
 ### API‑Key Management (`/api-keys`)
