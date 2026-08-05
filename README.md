@@ -67,15 +67,20 @@ DB_PORT=5432
 DB_USER=postgres
 DB_PASSWORD=postgres
 DB_NAME=hono_api
+
+# Buffer.from(crypto.getRandomValues(new Uint8Array(16))).toString("hex")
+# use the above command to generate random hex string of 16 bytes in node run mode or use the below given already generated hex code
+JWT_SECRET=cb2a06a2aa6700c3ccc48d8cf83626a1
 ```
 
 ### 4. Start PostgreSQL with Docker
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 The database will be reachable at `postgres://postgres:postgres@localhost:5432/hono_api`.
+<br>
 You can see tables using drizzle with `npx drizzle-kit studio`.
 
 ### 5. Run database migrations (Drizzle)
